@@ -23,53 +23,26 @@ public class ImageAdapter extends ArrayAdapter<Movie> {
         mContext = c;
     }
 
-    public int getCount() {
-        return mThumbIds.length;
-    }
-
-    public Movie getItem(int position) {
-        return null;
-    }
-
-    public long getItemId(int position) {
-        return 0;
-    }
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
 
-        final Movie currMov = (Movie) getItem(position);
+        final Movie currMov = getItem(position);
 
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(120*3, 175*3));
+            imageView.setLayoutParams(new GridView.LayoutParams(120*3, 68*3));
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setPadding(4, 4, 4, 4);
         } else {
             imageView = (ImageView) convertView;
         }
 
-        //imageView.setImageResource(mThumbIds[position]);
-        Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+        String path=mContext.getString(R.string.image_basepath)+currMov.getImageResource();
+        Picasso.with(mContext).load(path).into(imageView);
         return imageView;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-            R.drawable.interst, R.drawable.interst,
-
-    };
 }

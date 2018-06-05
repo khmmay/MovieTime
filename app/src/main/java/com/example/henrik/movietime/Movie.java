@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Henrik on 18.03.2018.
  */
 
-public class Movie {
+public class Movie implements java.io.Serializable {
 
     private String name;
     private String releaseDate;

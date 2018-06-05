@@ -19,6 +19,9 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
 
+    public static final String currentMovie="currentMovie";
+    private static final Movie DEFAULT_MOVIE=null;
+
 
 
     @Override
@@ -43,22 +46,24 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        try {
-            ArrayList<Movie> movies= JsonUtils.parseMovieJson(getResources().getString(R.string.JSONreply));
-
-            Movie curMovie=movies.get(position);
-
-            Picasso.with(this)
-                    .load(curMovie.getImageResource())
-                    .into(poster);
-
-            setTitle(curMovie.getName());
-            releaseDate.setText(curMovie.getReleaseDate());
-            rating.setText(curMovie.getVoteAverage().toString());
-            plot.setText(curMovie.getPlotSynopsis());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Movie curMovie = (Movie)intent.getSerializableExtra(currentMovie);
+        if (curMovie==DEFAULT_MOVIE){
+            closeOnError();
+            return;
         }
+
+
+        String path=getString(R.string.image_basepath)+curMovie.getImageResource();
+
+        Picasso.with(this)
+                .load(path)
+                .into(poster);
+
+        setTitle(curMovie.getName());
+        title.setText(curMovie.getName());
+        releaseDate.setText(curMovie.getReleaseDate());
+        rating.setText(curMovie.getVoteAverage().toString());
+        plot.setText(curMovie.getPlotSynopsis());
 
     }
 
