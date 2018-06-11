@@ -114,3 +114,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 }
+
+//TODO: Enable roation without data loss, trailers, opinions, favourits, databank;

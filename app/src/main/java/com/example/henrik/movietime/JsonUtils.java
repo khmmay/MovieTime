@@ -1,5 +1,9 @@
 package com.example.henrik.movietime;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,9 +27,12 @@ import java.util.List;
 
 public class JsonUtils {
 
-    public JsonUtils() {
+        static protected Context context;
 
-    }
+        public JsonUtils(Context context){
+            this.context = context.getApplicationContext();
+        }
+
 
 
     public static ArrayList<Movie> parseMovieJson(String json) throws JSONException {
@@ -41,11 +48,54 @@ public class JsonUtils {
             for (int i = 0; i < resultArray.length(); i++) {
                 JSONObject mov = resultArray.optJSONObject(i);
                 String name = mov.optString("title");
+                String id = mov.optString("id");
                 String date = mov.optString("release_date");
                 String imageResource = mov.optString("backdrop_path");
                 Double vote = mov.optDouble("vote_average");
                 String plotSynopsis = mov.optString("overview");
-                movies.add(new Movie(name, date, imageResource, vote, plotSynopsis));
+
+                //Get trailers
+                String test=getResources().getString(R.string.Request_Suffix_opinions);
+                ArrayList<String> trailers=null;
+                ArrayList<String> trailernames=null;
+                String trailerUrlString=Resources.getSystem().getString(R.string.Request_Basepath_trailop)+id+Resources.getSystem().getString(R.string.Request_Suffix_trailer)+Resources.getSystem().getString(R.string.APIkey);
+                URL trailerurl = createUrl(trailerUrlString);
+                String jsonResponse = null;
+                try {
+                    jsonResponse = makeHttpRequest(trailerurl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                JSONObject rootTrailerObject = new JSONObject(jsonResponse);
+                JSONArray trailerArray=rootTrailerObject.optJSONArray("results");
+                for(int j=0; j<trailerArray.length();j++){
+                    JSONObject trail = resultArray.optJSONObject(j);
+                    String trailkey =trail.optString("key");
+                    trailers.add(trailkey);
+                    String trailname =trail.optString("name");
+                    trailernames.add(trailname);
+                }
+
+
+                //Get opinions
+                ArrayList<String> optinions=null;
+                String opinionsUrlString=Resources.getSystem().getString(R.string.Request_Basepath_trailop)+id+Resources.getSystem().getString(R.string.Request_Suffix_opinions)+Resources.getSystem().getString(R.string.APIkey);
+                URL opinionurl = createUrl(opinionsUrlString);
+                jsonResponse = null;
+                try {
+                    jsonResponse = makeHttpRequest(opinionurl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                JSONObject rootOpinionObject = new JSONObject(jsonResponse);
+                JSONArray opinionArray=rootOpinionObject.optJSONArray("results");
+                for(int j=0; j<opinionArray.length();j++){
+                    JSONObject op = resultArray.optJSONObject(j);
+                    String opcont =op.optString("content");
+                    optinions.add(opcont);
+                }
+
+                movies.add(new Movie(name, date, imageResource, vote, plotSynopsis, trailers, optinions));
             }
 
 
@@ -72,7 +122,7 @@ public class JsonUtils {
         try {
             movies = parseMovieJson(jsonResponse);
         } catch (JSONException e) {
-            Log.e("tag", "Problem parsing the earthquake JSON results" + jsonResponse, e);
+            Log.e("tag", "Problem parsing the movie JSON results" + jsonResponse, e);
         }
         return movies;
     }

@@ -14,6 +14,9 @@
 
     <string name="Request_Basepath_popularity">http://api.themoviedb.org/3/movie/popular?api_key=</string>
     <string name="Request_Basepath_rating">http://api.themoviedb.org/3/movie/top_rated?api_key=</string>
+    <string name="Request_Basepath_trailop">http://api.themoviedb.org/3/movie/</string>
+    <string name="Request_Suffix_trailer">/videos?api_key=</string>
+    <string name="Request_Suffix_opinions">/reviews?api_key=</string>
     <string name="APIkey">f33f8be6ac888719ccde1c5daf065714</string>
     <string name="settings_menu_item">Settings</string>
     <string name="settings_title">MovieTime Settings</string>
